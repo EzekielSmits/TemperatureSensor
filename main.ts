@@ -4,6 +4,11 @@ input.onPinReleased(TouchPin.P0, function () {
 input.onButtonPressed(Button.A, function () {
     basic.showString("Celcuis: " + input.temperature())
 })
+input.onGesture(Gesture.ScreenUp, function () {
+    if (input.magneticForce(Dimension.Strength) > 100) {
+        basic.showString("Magnet Detected")
+    }
+})
 function CheckTemp () {
     if (input.temperature() < 18) {
         basic.showLeds(`
@@ -18,9 +23,9 @@ function CheckTemp () {
         basic.showLeds(`
             . . . . .
             . . . . #
-            # . . # .
-            . # # . .
-            . . . . .
+            . . . # .
+            # . # . .
+            . # . . .
             `)
     }
     if (input.temperature() > 24) {
@@ -33,9 +38,20 @@ function CheckTemp () {
             `)
     }
 }
-input.onButtonPressed(Button.B, function () {
-    basic.showString("LI: " + input.lightLevel())
+input.onButtonPressed(Button.AB, function () {
+    if (showTemp == 1) {
+        showTemp += -1
+    } else {
+        showTemp += 1
+    }
 })
+input.onButtonPressed(Button.B, function () {
+    basic.showString("Light: " + input.lightLevel())
+})
+let showTemp = 0
+showTemp = 0
 basic.forever(function () {
-    basic.showNumber(input.temperature())
+    if (showTemp == 1) {
+        basic.showNumber(input.temperature())
+    }
 })
